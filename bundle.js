@@ -20037,6 +20037,10 @@
 	  showPokemon: function (pokemonId) {
 	    this.setState({
 	      chosenPokemon: pokemonId
+	    }, function () {
+	      if (document.body.offsetWidth < 768) {
+	        window.scrollTo(0, document.body.scrollHeight);
+	      }
 	    });
 	  },
 
@@ -20094,7 +20098,7 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: this.state.chosenPokemon ? "col-md-8" : "col-md-8 col-md-offset-2" },
+	        { className: this.state.chosenPokemon ? "col-sm-8" : "col-sm-8 col-sm-offset-2" },
 	        this.state.chosenType ? React.createElement(
 	          'h2',
 	          { className: 'filtered' },
@@ -20121,7 +20125,7 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: this.state.chosenPokemon ? "col-md-4 full_pokemon" : "" },
+	        { className: this.state.chosenPokemon ? "col-sm-4 full_pokemon" : "" },
 	        this.state.chosenPokemon ? React.createElement(PokemonFull, {
 	          pokemon: this.getPokemonById(this.state.chosenPokemon),
 	          onClose: () => this.setState({ chosenPokemon: null })

@@ -24,6 +24,10 @@ var Root = React.createClass({
   showPokemon: function(pokemonId) {
     this.setState({
       chosenPokemon: pokemonId
+    }, function() {
+      if (document.body.offsetWidth < 768) {
+        window.scrollTo(0, document.body.scrollHeight)
+      }
     });
   },
 
@@ -75,7 +79,7 @@ var Root = React.createClass({
     return (
       <div className="row-fluid">
         <h1 className="text-center" onClick={this.state.chosenType ? this.resetFilter : false}><span>Pokedex</span></h1>
-        <div className={this.state.chosenPokemon ? "col-md-8" : "col-md-8 col-md-offset-2"}>
+        <div className={this.state.chosenPokemon ? "col-sm-8" : "col-sm-8 col-sm-offset-2"}>
           {this.state.chosenType ? <h2 className="filtered">Selected type: <span className={this.state.chosenType}>{this.state.chosenType}</span></h2> : null}
           <div id="pokemons">
             <Pokedex
@@ -89,7 +93,7 @@ var Root = React.createClass({
             />
           </div>
         </div>
-        <div className={this.state.chosenPokemon ? "col-md-4 full_pokemon" : ""}>
+        <div className={this.state.chosenPokemon ? "col-sm-4 full_pokemon" : ""}>
           {this.state.chosenPokemon ? <PokemonFull
             pokemon={this.getPokemonById(this.state.chosenPokemon)}
             onClose={() => this.setState({chosenPokemon: null})}

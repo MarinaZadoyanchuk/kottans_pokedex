@@ -151,7 +151,7 @@ span.shadow {
     }
 }
 
-@media all and (max-width: 999px) {
+@media all and (max-width: 766px) {
     .full_pokemon{
         position: relative;
         top: 0;
