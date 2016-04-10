@@ -20122,7 +20122,10 @@
 	      React.createElement(
 	        'div',
 	        { className: this.state.chosenPokemon ? "col-md-4 full_pokemon" : "" },
-	        this.state.chosenPokemon ? React.createElement(PokemonFull, { pokemon: this.getPokemonById(this.state.chosenPokemon) }) : ''
+	        this.state.chosenPokemon ? React.createElement(PokemonFull, {
+	          pokemon: this.getPokemonById(this.state.chosenPokemon),
+	          onClose: () => this.setState({ chosenPokemon: null })
+	        }) : ''
 	      )
 	    );
 	  }
@@ -20279,6 +20282,11 @@
 	    return React.createElement(
 	      'div',
 	      null,
+	      React.createElement(
+	        'div',
+	        { onClick: this.props.onClose, className: 'close' },
+	        'X'
+	      ),
 	      React.createElement('img', { src: "http://pokeapi.co/media/img/" + pokemon.pkdx_id + ".png", className: 'img-rounded img-responsive center-block' }),
 	      React.createElement(
 	        'h4',

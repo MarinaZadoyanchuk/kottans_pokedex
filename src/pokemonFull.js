@@ -13,6 +13,7 @@ var PokemonFull = React.createClass({
     const types = this.getStringTypes(pokemon.types);
     return (
       <div>
+        <div onClick={this.props.onClose} className="close">X</div>
         <img src={"http://pokeapi.co/media/img/" + pokemon.pkdx_id + ".png"} className="img-rounded img-responsive center-block"/>
         <h4 className="text-center">{pokemon.name}</h4>
         <table className="table table-striped table-bordered">

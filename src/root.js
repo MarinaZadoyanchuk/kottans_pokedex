@@ -90,7 +90,10 @@ var Root = React.createClass({
           </div>
         </div>
         <div className={this.state.chosenPokemon ? "col-md-4 full_pokemon" : ""}>
-          {this.state.chosenPokemon ? <PokemonFull pokemon={this.getPokemonById(this.state.chosenPokemon)}/> : ''}
+          {this.state.chosenPokemon ? <PokemonFull
+            pokemon={this.getPokemonById(this.state.chosenPokemon)}
+            onClose={() => this.setState({chosenPokemon: null})}
+          /> : ''}
         </div>
       </div>
     )

@@ -131,6 +131,19 @@ span.shadow {
     display: block;
     padding: 20px 0;
 }
+.close {
+    position: relative;
+    display: inline-block;
+    float: right;
+    padding: 25px;
+    color: #8b8f8e;
+    font-size: 25px;
+    cursor:pointer;
+}
+.close:hover {
+    color: #ffffff;
+    background-color: rgba(139, 143, 142, 0.8);
+}
 @media all and (max-height: 599px) {
     .full_pokemon table td {
         padding: 5px !important;
