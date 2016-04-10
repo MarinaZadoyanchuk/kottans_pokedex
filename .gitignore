@@ -1,0 +1,6 @@
+.gitignore
+.idea/
+.DS_Store
+src/.DS_Store
+node_modules/
+bower_components/
