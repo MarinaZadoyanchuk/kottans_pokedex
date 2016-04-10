@@ -119,6 +119,14 @@ span.shadow {
     top: 15%;
     right: 10px;
 }
+.loader img{
+    max-width: 200px;
+}
+.loader span {
+    display: block;
+    text-align: center;
+    font-size: 22px;
+}
 .is_loading {
     display: block;
     padding: 20px 0;

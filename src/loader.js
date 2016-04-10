@@ -8,6 +8,7 @@ var Loader = React.createClass({
     return (
       <div className="loader">
         <img src={"src/images/pokemons/" + this.getImage(1,11) + ".gif"} className="center-block" />
+        <span>LOADING...</span>
       </div>
     )
   }
