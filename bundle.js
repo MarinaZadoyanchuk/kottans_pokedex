@@ -6796,6 +6796,11 @@
 	  EventPluginHub.putListener(listenerToPut.inst, listenerToPut.registrationName, listenerToPut.listener);
 	}
 
+	function optionPostMount() {
+	  var inst = this;
+	  ReactDOMOption.postMountWrapper(inst);
+	}
+
 	// There are so many media events, it makes sense to just
 	// maintain a list rather than create a `trapBubbledEvent` for each
 	var mediaEvents = {
@@ -7104,6 +7109,8 @@
 	          transaction.getReactMountReady().enqueue(AutoFocusUtils.focusDOMComponent, this);
 	        }
 	        break;
+	      case 'option':
+	        transaction.getReactMountReady().enqueue(optionPostMount, this);
 	    }
 
 	    return mountImage;
@@ -8388,8 +8395,7 @@
 	        var propName = propertyInfo.propertyName;
 	        // Must explicitly cast values for HAS_SIDE_EFFECTS-properties to the
 	        // property type before comparing; only `value` does and is string.
-	        // Must set `value` property if it is not null and not yet set.
-	        if (!propertyInfo.hasSideEffects || '' + node[propName] !== '' + value || !node.hasAttribute(propertyInfo.attributeName)) {
+	        if (!propertyInfo.hasSideEffects || '' + node[propName] !== '' + value) {
 	          // Contrary to `setAttribute`, object properties are properly
 	          // `toString`ed by IE8/9.
 	          node[propName] = value;
@@ -10391,6 +10397,7 @@
 	var _assign = __webpack_require__(23);
 
 	var ReactChildren = __webpack_require__(96);
+	var ReactDOMComponentTree = __webpack_require__(4);
 	var ReactDOMSelect = __webpack_require__(98);
 
 	var warning = __webpack_require__(17);
@@ -10430,6 +10437,15 @@
 	    }
 
 	    inst._wrapperState = { selected: selected };
+	  },
+
+	  postMountWrapper: function (inst) {
+	    // value="" should make a value attribute (#6219)
+	    var props = inst._currentElement.props;
+	    if (props.value != null) {
+	      var node = ReactDOMComponentTree.getNodeFromInstance(inst);
+	      node.setAttribute('value', props.value);
+	    }
 	  },
 
 	  getNativeProps: function (inst, props) {
@@ -19204,7 +19220,7 @@
 
 	'use strict';
 
-	module.exports = '15.0.0';
+	module.exports = '15.0.1';
 
 /***/ },
 /* 157 */
@@ -19350,6 +19366,8 @@
 
 	'use strict';
 
+	var _assign = __webpack_require__(23);
+
 	var ReactChildren = __webpack_require__(96);
 	var ReactComponent = __webpack_require__(124);
 	var ReactClass = __webpack_require__(123);
@@ -19360,6 +19378,7 @@
 	var ReactVersion = __webpack_require__(156);
 
 	var onlyChild = __webpack_require__(165);
+	var warning = __webpack_require__(17);
 
 	var createElement = ReactElement.createElement;
 	var createFactory = ReactElement.createFactory;
@@ -19369,6 +19388,17 @@
 	  createElement = ReactElementValidator.createElement;
 	  createFactory = ReactElementValidator.createFactory;
 	  cloneElement = ReactElementValidator.cloneElement;
+	}
+
+	var __spread = _assign;
+
+	if (process.env.NODE_ENV !== 'production') {
+	  var warned = false;
+	  __spread = function () {
+	    process.env.NODE_ENV !== 'production' ? warning(warned, 'React.__spread is deprecated and should not be used. Use ' + 'Object.assign directly or another helper function with similar ' + 'semantics. You may be seeing this warning due to your compiler. ' + 'See https://fb.me/react-spread-deprecation for more details.') : void 0;
+	    warned = true;
+	    return _assign.apply(null, arguments);
+	  };
 	}
 
 	var React = {
@@ -19403,7 +19433,10 @@
 	  // since they are just generating DOM strings.
 	  DOM: ReactDOMFactories,
 
-	  version: ReactVersion
+	  version: ReactVersion,
+
+	  // Deprecated hook for JSX spread, don't use this for anything.
+	  __spread: __spread
 	};
 
 	module.exports = React;
@@ -20036,8 +20069,7 @@
 	    });
 	    this.setState({
 	      filteredPokemons: filteredPokemons,
-	      chosenType: typeName,
-	      chosenPokemon: null
+	      chosenType: typeName
 	    });
 	  },
 
@@ -20060,19 +20092,19 @@
 	          'Pokedex'
 	        )
 	      ),
-	      this.state.chosenType ? React.createElement(
-	        'h2',
-	        { className: 'filtered' },
-	        'Selected type: ',
-	        React.createElement(
-	          'span',
-	          { className: this.state.chosenType },
-	          this.state.chosenType
-	        )
-	      ) : null,
 	      React.createElement(
 	        'div',
-	        { className: 'col-md-8' },
+	        { className: this.state.chosenPokemon ? "col-md-8" : "col-md-8 col-md-offset-2" },
+	        this.state.chosenType ? React.createElement(
+	          'h2',
+	          { className: 'filtered' },
+	          'Selected type: ',
+	          React.createElement(
+	            'span',
+	            { className: this.state.chosenType },
+	            this.state.chosenType
+	          )
+	        ) : null,
 	        React.createElement(
 	          'div',
 	          { id: 'pokemons' },
@@ -20089,7 +20121,7 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'col-md-4 full_pokemon' },
+	        { className: this.state.chosenPokemon ? "col-md-4 full_pokemon" : "" },
 	        this.state.chosenPokemon ? React.createElement(PokemonFull, { pokemon: this.getPokemonById(this.state.chosenPokemon) }) : ''
 	      )
 	    );
@@ -20213,7 +20245,12 @@
 	    return React.createElement(
 	      "div",
 	      { className: "loader" },
-	      React.createElement("img", { src: "src/images/pokemons/" + this.getImage(1, 11) + ".gif", className: "center-block" })
+	      React.createElement("img", { src: "src/images/pokemons/" + this.getImage(1, 11) + ".gif", className: "center-block" }),
+	      React.createElement(
+	        "span",
+	        null,
+	        "LOADING..."
+	      )
 	    );
 	  }
 	});
