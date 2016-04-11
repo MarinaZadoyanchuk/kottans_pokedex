@@ -20046,7 +20046,7 @@
 
 	  getPokemonById: function (pokemonId) {
 	    var pokemons = this.state.pokemons;
-	    for (const i in pokemons) {
+	    for (var i in pokemons) {
 	      if (pokemons[i].pkdx_id == pokemonId) return pokemons[i];
 	    };
 
